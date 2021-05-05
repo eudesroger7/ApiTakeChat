@@ -10,15 +10,19 @@ module.exports = {
      * @return {Promise<void>}
      */
     async getUserRepositories(username, language, limit= 9999){
-        const auth = env ? { user: env.gitUsername, pass: env.gitPassword } : undefined;
+        try {
+            const auth = env ? { user: env.gitUsername, pass: env.gitPassword } : undefined;
 
-        const response = await axios.get(
-            `https://api.github.com/search/repositories?q=user:${username}+language:${language}&per_page=${limit}`,
-            {
-                auth
-            }
-        );
+            const response = await axios.get(
+                `https://api.github.com/search/repositories?q=user:${username}+language:${language}&per_page=${limit}`,
+                {
+                    auth
+                }
+            );
 
-        return response.data.items;
+            return response.data.items;
+        }   catch (error) {
+            console.log(error)
+        }
     }
 }
