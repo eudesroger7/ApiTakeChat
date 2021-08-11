@@ -16,7 +16,7 @@ module.exports = {
             const response = await axios.get(
                 `https://api.github.com/search/users?q=${username}&per_page=${limit}`,
                 {
-                    auth
+                    // auth
                 }
             );
 
