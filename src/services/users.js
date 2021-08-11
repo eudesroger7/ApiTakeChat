@@ -14,7 +14,7 @@ module.exports = {
             const auth = env ? { user: env.gitUsername, pass: env.gitPassword } : undefined;
 
             const response = await axios.get(
-                `https://api.github.com/search/users?q=${username}+language:${language}&per_page=${limit}`,
+                `https://api.github.com/search/users?q=${username}&per_page=${limit}`,
                 {
                     auth
                 }
