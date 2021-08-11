@@ -1,4 +1,4 @@
-const service = require('../services/repositories');
+const service = require('../services/users');
 const utils = require('../utils/repositories.utils');
 const redis = require('redis');
 
@@ -15,24 +15,23 @@ module.exports = {
         try {
             const {username} = req.params;
             const {limit = 5} = req.query;
-            const cacheName = `repositories_${username}`;
+            const cacheName = `users_${username}`;
 
             client.get(cacheName, async (err, result) => {
-                let userRepositories;
+                let users;
 
                 if(result) {
-                    userRepositories = JSON.parse(result);
+                    users = JSON.parse(result);
                 } else {
                     try {
-                        // %23 is the # code; used to correct the encode error
-                        userRepositories = await service.getUserRepositories(username, 10);
-                        client.setex(cacheName, 3600, JSON.stringify(userRepositories));
+                        users = await service.getUsers(username, '5');
+                        client.setex(cacheName, 3600, JSON.stringify(users));
                     }catch (error) {
                         return res.json({error: true, message: 'Could not perform the search'});
                     }
                 }
 
-                const responseData = utils.formatResponseData(userRepositories).sort((current, next) => current.created_at < next.created_at ? -1 : 1);
+                const responseData = utils.formatResponseData(users);
 
                 return res.json(responseData.slice(0, limit));
             });

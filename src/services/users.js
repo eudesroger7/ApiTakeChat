@@ -5,15 +5,16 @@ module.exports = {
     /**
      *
      * @param {string} username
+     * @param {string} language
      * @param {number} limit
      * @return {Promise<void>}
      */
-    async getUserRepositories(username, limit= 9999){
+    async getUsers(username, language, limit= 9999){
         try {
             const auth = env ? { user: env.gitUsername, pass: env.gitPassword } : undefined;
 
             const response = await axios.get(
-                `https://api.github.com/search/repositories?q=user:${username}&per_page=${limit}`,
+                `https://api.github.com/search/users?q=${username}+language:${language}&per_page=${limit}`,
                 {
                     auth
                 }
@@ -21,7 +22,7 @@ module.exports = {
 
             return response.data.items;
         }   catch (error) {
-            console.log(error)
+            return {error: true, message: error.toString()};
         }
     }
 }
